@@ -9,74 +9,100 @@ import java.util.Scanner;
  * COP 3503 : Computer Science II
  * Professor Sean Szumlanski
  * Assignment 7 : Maze Solver
- * Due: Sunday, November 17, 11:59pm
+ * Due: Wednesday, November 27, 11:59pm
  * 
  */
 
 /*
  * To implement a recursive backtracking solution we need to first identify three cases.
+ * 
  * 1. Reject: We are going the wrong way and the current path we are on won't lead us to the end. 
  * 		So we need to go back to where we first made the decision to go down this path.
+ * 
  * 2. Accept: We have reached the end destination and we found the solution.
+ * 
  * 3. Step: We are at a point between the start and the end, continue the next step, going over all possible options.
  */
 public class Maze {
-	// static int x = 1;
-	// static int y = 1;
+
+	// static array that will be set to the maze, and then manipulated during
+	// the backtracking, and then set equal to the maze variable Sean gave us.
 	public static char[][] myMaze = null;
 
 	public static void solve(char[][] maze) {
 		myMaze = maze;
+		// boolean to end the backtracking if we found the path to the end
 		boolean result = false;
 
+		// driver loops
 		for (int i = 0; i < maze.length; i++) {
 			for (int j = 0; j < maze[0].length; j++) {
-				if(walkTheMaze(i, j)){
+				// make the call to our recursive function.
+				if (walkTheMaze(i, j)) {
+					// if this specific call to the recursive 'walkTheMaze()'
+					// method
+					// is true, that means we have found the exit, so set our
+					// result
+					// variable to true and break out of the inner for() loop.
 					result = true;
 					break;
 				}
-				if(result){
-					//myMaze[1][1] = 's';
+				// if the result is true, we've found the path, so break out of
+				// the outer loop as well so we can return the correct
+				// maze/path.
+				if (result) {
 					break;
 				}
 			}
 		}
-		// walkTheMaze(1,1);
-		
+		// set the maze we were working with equal to the maze Sean wants.
 		maze = myMaze;
-
 	}
 
+	// Recursive backtracking function.
 	private static boolean walkTheMaze(int x, int y) {
+		// boolean that will be set to true if the current recursive call was
+		// the start of the maze, this is set to true to stop the recursive
+		// nature of the method overwriting the first cells 's'.
 		boolean wasStart = false;
-		// reject case
+		// rejection case.
 		if (myMaze[x][y] == '#' || myMaze[x][y] == '.') {
 			return false;
 		}
-
+		// acceptance case
 		if (myMaze[x][y] == 'e') {
 			return true;
 		}
-
+		// the start of the maze
 		if (myMaze[x][y] == 's') {
 			wasStart = true;
 		} else {
+			// otherwise, put a '.' in the cell to signify the path to the exit.
 			myMaze[x][y] = '.';
 		}
 
+		// check to the right
 		if (walkTheMaze(x, y + 1)) {
 			return true;
-		} else if (walkTheMaze(x - 1, y)) {
-			return true;
-		} else if (walkTheMaze(x, y - 1)) {
-			return true;
-		} else if (walkTheMaze(x + 1, y)) {
+		}
+		// check above
+		else if (walkTheMaze(x - 1, y)) {
 			return true;
 		}
-		
-		if(!wasStart)
+		// check to the left
+		else if (walkTheMaze(x, y - 1)) {
+			return true;
+		}
+		// check below
+		else if (walkTheMaze(x + 1, y)) {
+			return true;
+		}
+
+		// make sure we don't overwrite the 's' in the starting cell of the maze
+		if (!wasStart)
 			myMaze[x][y] = ' ';
 
+		// if it's not true return false.
 		return false;
 	}
 
@@ -85,10 +111,11 @@ public class Maze {
 	}
 
 	public static double hoursSpent() {
-		return 5;
+		return 3;
 	}
 
 	// A method for printing mazes.
+	// seans code
 	public static void printMaze(char[][] maze) {
 		for (int i = 0; i < maze.length; i++) {
 			for (int j = 0; j < maze[i].length; j++)
@@ -100,6 +127,7 @@ public class Maze {
 		System.out.println();
 	}
 
+	// this is seans code
 	// A method for reading mazes from a text file into a 2D char array. Assumes
 	// there are no blank lines in the input file, and all lines are the same
 	// length. Returns a reference to the 2D char array containing the maze.
@@ -122,6 +150,7 @@ public class Maze {
 		return maze;
 	}
 
+	// this is seans code
 	// A method for comparing two 2D char arrays. Returns 'true' if they're
 	// identical, 'false' otherwise.
 	public static boolean mazeCompare(char[][] a, char[][] b) {
